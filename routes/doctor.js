@@ -14,7 +14,16 @@ router.post("/register",async (req,res)=>{
     res.status(500).json({message:e});
   })
 })
-router.get("/login",async function(req,res){
+router.post("/login",async function(req,res){
+  const logDoctor= await Doctor.find()
+    .then((result)=>{
+      res.status(201).json({success:true,data:result});
+    })
+    .catch((e)=>{
+      res.status(500).json({message:e});
+  })
+})
+router.get("/view",async function(req,res){
   const logDoctor= await Doctor.find()
     .then((result)=>{
       res.status(201).json({success:true,data:result});

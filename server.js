@@ -1,5 +1,6 @@
 const express=require('express');
 const server=express();
+const winston=require('winston');
 const cors=require('cors');
 require('./database/db');
 require('dotenv').config();
@@ -12,6 +13,27 @@ server.use(express.urlencoded({extended:false}));
 server.use('/patient',patientroute);
 server.use('/doctor',doctorroute);
 
+const logger = winston.createLogger({
+  level: 'info',
+  format: winston.format.json(),
+  defaultMeta: { service: 'user-service' },
+  transports: [
+    //
+    // - Write all logs with level `error` and below to `error.log`
+    // - Write all logs with level `info` and below to `combined.log`
+    //
+    new winston.transports.Console({
+      format:winston.format.combine(
+        winston.format.colorize({all:true})
+      )
+    }),
+    new winston.transports.File({ filename: 'error.log', level: 'error' }),
+    new winston.transports.File({ filename: 'combined.log' }),
+  ],
+  exceptionHandlers: [
+    new winston.transports.File({ filename: 'exceptions.log' })
+  ]
+});
 // server.use(function (req, res, next) {
 //   res.header('Access-Control-Allow-Origin', '*');
 //   res.header('Access-Control-Allow-Headers', 'Content-Type, X-Requested-With, Origin');
@@ -23,8 +45,6 @@ server.use(cors({
 }));
 const PORT = process.env.PORT || 90;
 server.listen(PORT,()=>{
-  console.log(`server running on port : ${PORT}` )
-}
-  
-);
+  logger.warn(`server running on port : ${PORT}` )
+});
 
