@@ -7,21 +7,20 @@ router.post("/register",async (req,res)=>{
   if(error.message) res.status(400).send(error.message);
   var dData=new Doctor(req.body);
   dData.save()
-  // .then(()=>{
-  //   res.status(201).json({success:true});
-  // })
-  // .catch((e)=>{ 
-  //   res.status(500).json({message:e});
-  // })
+  .then(()=>{
+    res.status(201).json({success:true});
+  })
+  .catch((e)=>{ 
+    res.status(500).json({message:e});
+  })
 })
-router.get("/login",function(req,res){
-  Doctor.find()
+router.get("/login",async function(req,res){
+  const logDoctor= await Doctor.find()
     .then((result)=>{
       res.status(201).json({success:true,data:result});
     })
     .catch((e)=>{
       res.status(500).json({message:e});
-    
   })
 })
 module.exports=router;
