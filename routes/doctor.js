@@ -2,7 +2,7 @@ const express=require('express');
 const router=express.Router();
 const Doctor=require('../models/doctor');
 
-router.post("/registerdoctor",(req,res)=>{
+router.post("/doctor/register",(req,res)=>{
     
   var dData=new Doctor(req.body);
   dData.save().then(()=>{
@@ -11,7 +11,7 @@ router.post("/registerdoctor",(req,res)=>{
 
   
 })
-router.get("/logindoctor",function(req,res){
+router.get("/doctor/login",function(req,res){
   Doctor.find().then(function(data){
     // console.log(data[2])
       res.send(data);

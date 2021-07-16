@@ -1,5 +1,5 @@
 const mongoose=require('mongoose');
-mongoose.connect('mongodb://127.0.0.1:27017/Doctor360DB',{
+mongoose.connect('mongodb+srv://Doctor360:doctor360admin@doctor360cluster.qyi5g.mongodb.net/Doctor360DB',{
     useNewUrlParser:true,
     useCreateIndex:true,
     useUnifiedTopology:true
