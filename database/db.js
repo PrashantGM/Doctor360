@@ -1,7 +1,10 @@
 const mongoose=require('mongoose');
-mongoose.connect('mongodb+srv://Doctor360:doctor360admin@doctor360cluster.qyi5g.mongodb.net/Doctor360DB',{
+require('dotenv').config();
+mongoose.connect(process.env.MONGO_URL,{
     useNewUrlParser:true,
     useCreateIndex:true,
     useUnifiedTopology:true
 
+}).catch(error=>{
+    console.log("Error occurred",error);
 })

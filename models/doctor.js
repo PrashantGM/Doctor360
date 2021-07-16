@@ -1,5 +1,6 @@
 const mongoose=require('mongoose');
-const Doctor = mongoose.model('Doctor',{
+
+const DoctorSchema=new mongoose.Schema({
     name:{
         type:String,
         required:true
@@ -34,4 +35,4 @@ const Doctor = mongoose.model('Doctor',{
         required:true
     }
 })
-module.exports=Doctor;
+module.exports=new mongoose.model('Doctor',DoctorSchema);

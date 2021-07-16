@@ -1,5 +1,5 @@
 const mongoose=require('mongoose');
-const Patient=mongoose.model('Patient',{
+const PatientSchema=new mongoose.Schema({
     name:{
         type:String,
         required:true
@@ -33,4 +33,5 @@ const Patient=mongoose.model('Patient',{
         required:true
     }
 })
-module.exports=Patient;
+
+module.exports=new mongoose.model('Patient',PatientSchema);

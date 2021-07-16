@@ -2,19 +2,26 @@ const express=require('express');
 const router=express.Router();
 const Doctor=require('../models/doctor');
 
-router.post("/doctor/register",(req,res)=>{
+router.post("/register",(req,res)=>{
     
   var dData=new Doctor(req.body);
-  dData.save().then(()=>{
-    res.send("Doctor Registered");
+  dData.save()
+  .then(()=>{
+    res.status(201).json({success:true});
+  })
+  .catch((e)=>{
+    res.status(500).json({message:e});
+    
+  })
 })
-
-  
-})
-router.get("/doctor/login",function(req,res){
-  Doctor.find().then(function(data){
-    // console.log(data[2])
-      res.send(data);
+router.get("/login",function(req,res){
+  Doctor.find()
+    .then((result)=>{
+      res.status(201).json({success:true,data:result});
+    })
+    .catch((e)=>{
+      res.status(500).json({message:e});
+    
   })
 })
 module.exports=router;
