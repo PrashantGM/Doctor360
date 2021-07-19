@@ -10,13 +10,14 @@ router.post("/register", async (req,res)=>{
   const mobile=req.body.mobile;
   const gender=req.body.gender;
   const specialization=req.body.specialization;
+  const qualification=req.body.qualification;
   const documentImage=req.body.documentImage;
   const password=req.body.password;
   bcrypt.hash(password,10,(err,hash)=>{
-    var dData= new Doctor({name:name,email:email,mobile:mobile,gender:gender,specialization:specialization,documentImage:documentImage,password:hash});
+    var dData= new Doctor({name:name,email:email,mobile:mobile,gender:gender,specialization:specialization,qualification:qualification,documentImage:documentImage,password:hash});
     dData.save()
     .then(()=>{
-      res.status(201).json({success:true});
+      res.status(201).json({success:true,message:"Successfully Registered"});
     })
     .catch((e)=>{ 
       res.status(500).json({message:e});
