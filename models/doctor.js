@@ -17,7 +17,6 @@ const DoctorSchema = new mongoose.Schema({
         // unique: true,
         required: true
     },
-
     gender: {
         type: String,
         required: true
@@ -25,6 +24,14 @@ const DoctorSchema = new mongoose.Schema({
     specialization: {
         type: String,
         required: true
+    },
+    qualification:{
+        type:String,
+        required:true
+    },
+    status:{
+        type:Number,
+        default:0
     },
     documentImage: {
         type: String,

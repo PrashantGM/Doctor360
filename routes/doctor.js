@@ -39,7 +39,7 @@ router.post("/login",function(req,res){
         if(result==false){
             return res.status(403).json({message:"Invalid Credentials"})
         }
-      return res.status(201).json({success:true,data:data}); 
+      return res.status(201).json({success:true,data:data,message:"Successfully logged in"}); 
     })
     })
     .catch((e)=>{
