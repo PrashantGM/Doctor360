@@ -6,12 +6,15 @@ require('./database/db');
 require('dotenv').config();
 const patientroute=require('./routes/patient');
 const doctorroute=require('./routes/doctor');
+const adminroute=require('./routes/admin');
 
 //Middlewares
 server.use(express.json());
 server.use(express.urlencoded({extended:false}));
 server.use('/patient',patientroute);
 server.use('/doctor',doctorroute);
+server.use('/admin',adminroute);
+
 
 const logger = winston.createLogger({
   level: 'info',
