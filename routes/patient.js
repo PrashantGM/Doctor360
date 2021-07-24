@@ -15,7 +15,7 @@ router.post("/register",async (req,res)=>{
       var pData=new Patient({name:name,address:address,email:email,mobile:mobile,gender:gender,bloodGroup:bloodGroup,age:age,password:hash});
       pData.save()
       .then(()=>{
-        res.status(201).json({success:true});
+        res.status(201).json({success:true,message:"Patient Successfully Registered"});
       })
       .catch((e)=>{ 
         res.status(500).json({message:e});
