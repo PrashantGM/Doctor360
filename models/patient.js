@@ -28,6 +28,10 @@ const PatientSchema=new mongoose.Schema({
     bloodGroup:{
         type:String,
     },
+    usertype:{
+        type:String,
+        default:"Patient"
+    },
     password:{
         type:String,
         required:true

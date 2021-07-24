@@ -33,6 +33,13 @@ const DoctorSchema = new mongoose.Schema({
         type:Number,
         default:0
     },
+    usertype:{
+        type:String,
+        default:"Doctor"
+    },
+    // isOnline:{
+    //     type:Number,
+    // },
     documentImage: {
         type: String,
         default: "no-photo.jpg",

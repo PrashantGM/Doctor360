@@ -3,7 +3,8 @@ const router=express.Router();
 const bcrypt=require('bcryptjs');
 const Admin=require('../models/admin');
  const Doctor=require('../models/doctor');
-
+ const Patient=require('../models/patient');
+//Creates admin directly from static code below 
 router.post("/register",(req,res)=>{
     const name="Ashmin KC";
     const email="admin@gmail.com";
@@ -67,4 +68,14 @@ Doctor.updateOne({_id:did},{status:1})
 })
 
 });
+router.get("/patients/view",async function(req,res){
+  const logDoctor= await Patient.find()
+    .then((result)=>{
+      res.status(201).json({success:true,data:result});
+    })
+    .catch((e)=>{
+      res.status(500).json({message:e});
+  })
+})
+
 module.exports=router;
