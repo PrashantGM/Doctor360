@@ -20,10 +20,11 @@ router.post("/register", async (req,res)=>{
       res.status(201).json({success:true,message:"Successfully Registered"});
     })
     .catch((e)=>{ 
-      res.status(500).json({message:e});
+      res.status(500).json({success:false,message:"Registration Error"});
     })
   })
 })
+
 router.post("/login",function(req,res){
   const email=req.body.email;
   const password=req.body.password;
@@ -32,18 +33,18 @@ router.post("/login",function(req,res){
       console.log(data);
       if(data==null)
       {
-        return res.status(403).json({message:"Invalid Credentials!!"})
+        return res.status(403).json({success:false,message:"Invalid Credentials!!"})
       }
       bcrypt.compare(password,data.password,function(err,result){
         console.log(data.password);
         if(result==false){
-            return res.status(403).json({message:"Invalid Credentials"})
+            return res.status(403).json({success:false,message:"Invalid Credentials"})
         }
       return res.status(201).json({success:true,data:data,message:"Successfully logged in"}); 
     })
     })
     .catch((e)=>{
-      res.status(500).json({e});
+      res.status(500).json({success:false,e});
   })
 })
 router.get("/view",async function(req,res){
@@ -52,7 +53,7 @@ router.get("/view",async function(req,res){
       res.status(201).json({success:true,data:result});
     })
     .catch((e)=>{
-      res.status(500).json({message:e});
+      res.status(500).json({sucess:false,message:"Error loading results"});
   })
 })
 

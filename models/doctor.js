@@ -52,7 +52,7 @@ const DoctorSchema = new mongoose.Schema({
 const validateDoctor = (doctor) => {
     const schema = yup.object().shape({
         name: yup.string().required('Please input your name'),
-        email: yup.string().required(),
+        email: yup.string().required().email(),
         mobile: yup.string().required(),
         gender: yup.string().required(),
         specialization: yup.string().required(),

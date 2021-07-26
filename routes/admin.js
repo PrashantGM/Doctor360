@@ -17,7 +17,7 @@ router.post("/register",(req,res)=>{
       res.status(201).json({success:true,message:`Admin ${name} created`});
     })
     .catch((e)=>{ 
-      res.status(500).json({message:e});
+      res.status(500).json({success:false,message:"Unsuccessful Registration"});
     })
   })
 })
@@ -29,17 +29,17 @@ router.post("/login",function(req,res){
       console.log(data);
       if(data==null)
       {
-        return res.status(403).json({message:"Invalid Credentials!!"})
+        return res.status(403).json({success:false,message:"Invalid Credentials!!"})
       }
       bcrypt.compare(password,data.password,function(err,result){
         if(result==false){
-            return res.status(403).json({message:"Invalid Credentials"})
+            return res.status(403).json({success:false,message:"Invalid Credentials"})
         }
       return res.status(201).json({success:true,message:"Successfully logged into admin panel"}); 
     })
     })
     .catch((e)=>{
-      res.status(500).json({e});
+      res.status(500).json({success:false,message:e});
   })
 })
 //direct use of doctor router module for admin route to be tried later
@@ -52,7 +52,7 @@ router.get("/doctors/view",async function(req,res){
         res.status(201).json({success:true,data:result});
       })
       .catch((e)=>{
-        res.status(500).json({message:e});
+        res.status(500).json({success:false,message:"Error loading results"});
     })
   })
   
@@ -61,10 +61,10 @@ router.put('/doctors/update/:id',function(req,res){
 const did=req.params.id;
 Doctor.updateOne({_id:did},{status:1})
 .then(function(result){
-    res.status(200).json({message:"Doctor Verfied Successfully"})
+    res.status(200).json({success:true,message:"Doctor Verfied Successfully"})
 })
 .catch(function(e){
-    res.status(500).json({message:e});
+    res.status(500).json({success:false,message:"Error! Verification Unsuccessful"});
 })
 
 });
@@ -74,7 +74,7 @@ router.get("/patients/view",async function(req,res){
       res.status(201).json({success:true,data:result});
     })
     .catch((e)=>{
-      res.status(500).json({message:e});
+      res.status(500).json({success:false,message:"Error loading results"});
   })
 })
 

@@ -18,7 +18,7 @@ router.post("/register",async (req,res)=>{
         res.status(201).json({success:true,message:"Patient Successfully Registered"});
       })
       .catch((e)=>{ 
-        res.status(500).json({message:e});
+        res.status(500).json({success:false,message:"Registration Error"});
       })
      
     });
@@ -31,17 +31,17 @@ router.post("/login",function(req,res){
       .then((pdata)=>{
         if(pdata==null)
         {
-          return res.status(403).json({message:"Invalid Credentials!!"})
+          return res.status(403).json({success:false,message:"Invalid Credentials!!"})
         }
         bcrypt.compare(password,pdata.password,function(err,result){
           if(result==false){
-              return res.status(403).json({message:"Invalid Credentials"})
+              return res.status(403).json({success:false,message:"Invalid Credentials"})
           }
         return res.status(201).json({success:true,data:pdata,message:"Patient Successfully Logged In"}); 
       })
       })
       .catch((e)=>{
-        res.status(500).json({message:e});
+        res.status(500).json({success:false,message:e});
     })
 })
 module.exports=router
