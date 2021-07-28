@@ -35,13 +35,13 @@ router.post("/login",function(req,res){
         }
         bcrypt.compare(password,pdata.password,function(err,result){
           if(result==false){
-              return res.status(403).json({success:"false",message:"Invalid Credentials"})
+              return res.status(403).json({failure:"true",message:"Invalid Credentials"})
           }
         return res.status(201).json({success:"true",data:pdata,message:"Patient Successfully Logged In"}); 
       })
       })
       .catch((e)=>{
-        res.status(500).json({success:"false",message:e});
+        res.status(500).json({failure:"true",message:e});
     })
 })
 

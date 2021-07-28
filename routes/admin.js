@@ -66,7 +66,6 @@ Doctor.updateOne({_id:did},{status:1})
 .catch(function(e){
     res.status(500).json({success:"false",message:"Error! Verification Unsuccessful"});
 })
-
 });
 router.get("/patients/view",async function(req,res){
   const logDoctor= await Patient.find()
