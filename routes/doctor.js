@@ -17,10 +17,10 @@ router.post("/register", async (req,res)=>{
     var dData= new Doctor({name:name,email:email,mobile:mobile,gender:gender,specialization:specialization,qualification:qualification,documentImage:documentImage,password:hash});
     dData.save()
     .then(()=>{
-      res.status(201).json({success:true,message:"Successfully Registered"});
+      res.status(201).json({success:"true",message:"Successfully Registered"});
     })
     .catch((e)=>{ 
-      res.status(500).json({success:false,message:"Registration Error"});
+      res.status(500).json({success:"false",message:"Registration Error"});
     })
   })
 })
@@ -33,27 +33,27 @@ router.post("/login",function(req,res){
       console.log(data);
       if(data==null)
       {
-        return res.status(403).json({success:false,message:"Invalid Credentials!!"})
+        return res.status(403).json({success:"false",message:"Invalid Credentials!!"})
       }
       bcrypt.compare(password,data.password,function(err,result){
         console.log(data.password);
         if(result==false){
-            return res.status(403).json({success:false,message:"Invalid Credentials"})
+            return res.status(403).json({success:"false",message:"Invalid Credentials"})
         }
-      return res.status(201).json({success:true,data:data,message:"Successfully logged in"}); 
+      return res.status(201).json({success:"true",data:data,message:"Successfully logged in"}); 
     })
     })
     .catch((e)=>{
-      res.status(500).json({success:false,e});
+      res.status(500).json({success:"false",e});
   })
 })
 router.get("/view",async function(req,res){
   const logDoctor= await Doctor.find()
     .then((result)=>{
-      res.status(201).json({success:true,data:result});
+      res.status(201).json({success:"true",data:result});
     })
     .catch((e)=>{
-      res.status(500).json({sucess:false,message:"Error loading results"});
+      res.status(500).json({sucess:"false",message:"Error loading results"});
   })
 })
 
