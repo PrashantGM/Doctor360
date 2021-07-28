@@ -72,14 +72,14 @@ router.get("/view/:id",async function(req,res){
 
 router.put('/updateprofile/:id',function(req,res){
   const name=req.body.name;
-  const address=req.body.address;
   const email=req.body.email;
   const mobile=req.body.mobile;
   const gender=req.body.gender;
   const specialization=req.body.specialization;
   const qualification=req.body.qualification;
-  const hid=req.body.id;
-  Doctor.updateOne({_id:hid},{name:name,address:address,email:email,mobile:mobile,gender:gender,specialization:specialization,qualification:qualification})
+  const did=req.params.id;
+
+  Doctor.updateOne({_id:did},{name:name,email:email,mobile:mobile,gender:gender,specialization:specialization,qualification:qualification})
   .then(function(result){
       res.status(200).json({success:"true",message:`Profile of Dr. ${name}  Updated`})
   })
@@ -103,8 +103,10 @@ router.get("/viewpassword/:id",async function(req,res){
 router.put('/updatepassword/:id',function(req,res){
  
   const password=req.body.password;
-  const hid=req.body.id;
-  Doctor.updateOne({_id:hid},{password:password})
+  const did=req.params.id;
+  console.log(password)
+  console.log(did)
+  Doctor.updateOne({_id:did},{password:password})
   .then(function(result){
       res.status(200).json({success:"true",message:"Password Changed Successfully"})
   })

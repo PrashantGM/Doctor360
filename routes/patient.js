@@ -66,8 +66,8 @@ router.put('/updateprofile/:id',function(req,res){
   const gender=req.body.gender;
   const age=req.body.age;
   const bloodGroup=req.body.bloodGroup;
-  const hid=req.body.id;
-  Patient.updateOne({_id:hid},{name:name,address:address,email:email,mobile:mobile,gender:gender,age:age,bloodGroup:bloodGroup})
+  const pid=req.params.id;
+  Patient.updateOne({_id:pid},{name:name,address:address,email:email,mobile:mobile,gender:gender,age:age,bloodGroup:bloodGroup})
   .then(function(result){
       res.status(200).json({success:"true",message:`Profile of ${name}  Updated`})
   })
@@ -91,8 +91,8 @@ router.get("/viewpassword/:id",async function(req,res){
 router.put('/updatepassword/:id',function(req,res){
  
   const password=req.body.password;
-  const hid=req.body.id;
-  Patient.updateOne({_id:hid},{password:password})
+  const pid=req.params.id;
+  Patient.updateOne({_id:pid},{password:password})
   .then(function(result){
       res.status(200).json({success:"true",message:"Password Changed Successfully"})
   })
