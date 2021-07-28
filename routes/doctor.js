@@ -38,7 +38,7 @@ router.post("/login",function(req,res){
       bcrypt.compare(password,data.password,function(err,result){
         console.log(data.password);
         if(result==false){
-            return res.status(201).json({success:"false",message:"Invalid Credentials"})
+            return res.status(201).json({success:"false",data:data,message:"Invalid Credentials"})
         }
       return res.status(201).json({success:"true",data:data,message:"Successfully logged in"}); 
     })
