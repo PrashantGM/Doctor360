@@ -18,7 +18,7 @@ router.post("/register",async (req,res)=>{
         res.status(201).json({success:"true",message:"Patient Successfully Registered"});
       })
       .catch((e)=>{ 
-        res.status(500).json({success:"false",message:"Registration Error"});
+        res.status(201).json({success:"false",message:"Registration Error"});
       })
      
     });
@@ -53,7 +53,7 @@ router.get("/view/:id",async function(req,res){
       res.status(201).json({success:"true",data:result});
     })
     .catch((e)=>{
-      res.status(500).json({success:"false",message:"Error loading results"});
+      res.status(201).json({success:"false",message:"Error loading results"});
   })
 })
 
@@ -69,10 +69,10 @@ router.put('/updateprofile/:id',function(req,res){
   const pid=req.params.id;
   Patient.updateOne({_id:pid},{name:name,address:address,email:email,mobile:mobile,gender:gender,age:age,bloodGroup:bloodGroup})
   .then(function(result){
-      res.status(200).json({success:"true",message:`Profile of ${name}  Updated`})
+      res.status(201).json({success:"true",message:`Profile of ${name}  Updated`})
   })
   .catch(function(e){
-      res.status(500).json({success:"false",message:e});
+      res.status(201).json({success:"false",message:e});
   })
 });
 
@@ -85,7 +85,7 @@ router.get("/viewpassword/:id",async function(req,res){
       res.status(201).json({success:"true",data:result.password});
     })
     .catch((e)=>{
-      res.status(500).json({success:"false",message:"Error loading results"});
+      res.status(201).json({success:"false",message:"Error loading results"});
   })
 })
 router.put('/updatepassword/:id',function(req,res){
@@ -94,10 +94,10 @@ router.put('/updatepassword/:id',function(req,res){
   const pid=req.params.id;
   Patient.updateOne({_id:pid},{password:password})
   .then(function(result){
-      res.status(200).json({success:"true",message:"Password Changed Successfully"})
+      res.status(201).json({success:"true",message:"Password Changed Successfully"})
   })
   .catch(function(e){
-      res.status(500).json({success:"false",message:e});
+      res.status(201).json({success:"false",message:e});
   })
 });
 

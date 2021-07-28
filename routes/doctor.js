@@ -20,7 +20,7 @@ router.post("/register", async (req,res)=>{
       res.status(201).json({success:"true",message:"Successfully Registered"});
     })
     .catch((e)=>{ 
-      res.status(500).json({success:"false",message:"Registration Error"});
+      res.status(201).json({success:"false",message:"Registration Error"});
     })
   })
 })
@@ -33,18 +33,18 @@ router.post("/login",function(req,res){
       console.log(data);
       if(data==null)
       {
-        return res.status(403).json({success:"false",message:"Invalid Credentials!!"})
+        return res.status(201).json({success:"false",message:"Invalid Credentials!!"})
       }
       bcrypt.compare(password,data.password,function(err,result){
         console.log(data.password);
         if(result==false){
-            return res.status(403).json({success:"false",message:"Invalid Credentials"})
+            return res.status(201).json({success:"false",message:"Invalid Credentials"})
         }
       return res.status(201).json({success:"true",data:data,message:"Successfully logged in"}); 
     })
     })
     .catch((e)=>{
-      res.status(500).json({success:"false",e});
+      res.status(201).json({success:"false",e});
   })
 })
 router.get("/view",async function(req,res){
@@ -53,7 +53,7 @@ router.get("/view",async function(req,res){
       res.status(201).json({success:"true",data:result});
     })
     .catch((e)=>{
-      res.status(500).json({sucess:"false",message:"Error loading results"});
+      res.status(201).json({sucess:"false",message:"Error loading results"});
   })
 })
 
@@ -65,7 +65,7 @@ router.get("/view/:id",async function(req,res){
       res.status(201).json({success:"true",data:result});
     })
     .catch((e)=>{
-      res.status(500).json({success:"false",message:"Error loading results"});
+      res.status(201).json({success:"false",message:"Error loading results"});
   })
 })
 
@@ -81,10 +81,10 @@ router.put('/updateprofile/:id',function(req,res){
 
   Doctor.updateOne({_id:did},{name:name,email:email,mobile:mobile,gender:gender,specialization:specialization,qualification:qualification})
   .then(function(result){
-      res.status(200).json({success:"true",message:`Profile of Dr. ${name}  Updated`})
+      res.status(201).json({success:"true",message:`Profile of Dr. ${name}  Updated`})
   })
   .catch(function(e){
-      res.status(500).json({success:"false",message:e});
+      res.status(201).json({success:"false",message:e});
   })
 });
 
@@ -97,7 +97,7 @@ router.get("/viewpassword/:id",async function(req,res){
       res.status(201).json({success:"true",data:result.password});
     })
     .catch((e)=>{
-      res.status(500).json({success:"false",message:"Error loading results"});
+      res.status(201).json({success:"false",message:"Error loading results"});
   })
 })
 router.put('/updatepassword/:id',function(req,res){
@@ -108,10 +108,10 @@ router.put('/updatepassword/:id',function(req,res){
   console.log(did)
   Doctor.updateOne({_id:did},{password:password})
   .then(function(result){
-      res.status(200).json({success:"true",message:"Password Changed Successfully"})
+      res.status(201).json({success:"true",message:"Password Changed Successfully"})
   })
   .catch(function(e){
-      res.status(500).json({success:"false",message:e});
+      res.status(201).json({success:"false",message:e});
   })
 });
 
