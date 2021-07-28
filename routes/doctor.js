@@ -44,7 +44,7 @@ router.post("/login",function(req,res){
     })
     })
     .catch((e)=>{
-      res.status(201).json({success:"false",e});
+      res.status(201).json({success:"false",data:data,message:e});
   })
 })
 router.get("/view",async function(req,res){
@@ -53,7 +53,7 @@ router.get("/view",async function(req,res){
       res.status(201).json({success:"true",data:result});
     })
     .catch((e)=>{
-      res.status(201).json({sucess:"false",message:"Error loading results"});
+      res.status(201).json({success:"false",message:"Error loading results"});
   })
 })
 
