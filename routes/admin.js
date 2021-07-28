@@ -35,7 +35,7 @@ router.post("/login",function(req,res){
         if(result==false){
             return res.status(403).json({success:"false",message:"Invalid Credentials"})
         }
-      return res.status(201).json({success:true,message:"Successfully logged into admin panel"}); 
+      return res.status(201).json({success:"true",message:"Successfully logged into admin panel"}); 
     })
     })
     .catch((e)=>{
