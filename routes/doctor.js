@@ -79,7 +79,7 @@ router.put('/updateprofile/:id',function(req,res){
   const specialization=req.body.specialization;
   const qualification=req.body.qualification;
   const hid=req.body.id;
-  Hospital.updateOne({_id:hid},{name:name,address:address,email:email,mobile:mobile,gender:gender,specialization:specialization,qualification:qualification})
+  Doctor.updateOne({_id:hid},{name:name,address:address,email:email,mobile:mobile,gender:gender,specialization:specialization,qualification:qualification})
   .then(function(result){
       res.status(200).json({success:"true",message:`Profile of Dr. ${name}  Updated`})
   })
@@ -104,7 +104,7 @@ router.put('/updatepassword/:id',function(req,res){
  
   const password=req.body.password;
   const hid=req.body.id;
-  Hospital.updateOne({_id:hid},{password:password})
+  Doctor.updateOne({_id:hid},{password:password})
   .then(function(result){
       res.status(200).json({success:"true",message:"Password Changed Successfully"})
   })
