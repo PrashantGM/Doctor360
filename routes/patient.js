@@ -88,17 +88,27 @@ router.get("/viewpassword/:id",async function(req,res){
       res.status(201).json({success:"false",message:"Error loading results"});
   })
 })
-router.put('/updatepassword/:id',function(req,res){
- 
+router.put('/changepassword/:id',function(req,res){
+  const currrentpassword=req.body.currrentpassword;
   const password=req.body.password;
   const pid=req.params.id;
-  Patient.updateOne({_id:pid},{password:password})
+  Patient.findOne({_id:pid})
+  .then((pdata)=>{
+    bcrypt.compare(currrentpassword,pdata.password,function(err,result){
+      if(result==false){
+          return res.status(201).json({success:"false",message:"Incorrect Current Password"})
+      }
+  })
+  })
+  console.log("Inbetween now")
+  bcrypt.hash(password,10,function(err,hash){
+  Patient.updateOne({_id:pid},{password:hash})
   .then(function(result){
       res.status(201).json({success:"true",message:"Password Changed Successfully"})
   })
   .catch(function(e){
       res.status(201).json({success:"false",message:e});
   })
-});
-
+})
+})
 module.exports=router
