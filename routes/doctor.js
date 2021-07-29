@@ -104,9 +104,9 @@ router.put('/changepassword/:id',function(req,res){
   const currrentpassword=req.body.currrentpassword;
   const password=req.body.password;
   const did=req.params.id;
-  Doctor.findOne({_id:pid})
+  Doctor.findOne({_id:did})
   .then((ddata)=>{
-    bcrypt.compare(currrentpassword,pdata.password,function(err,result){
+    bcrypt.compare(currrentpassword,ddata.password,function(err,result){
       if(result==false){
           return res.status(201).json({success:"false",message:"Incorrect Current Password"})
       }

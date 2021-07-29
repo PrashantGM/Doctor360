@@ -2,7 +2,7 @@ const express=require('express');
 const router=express.Router();
 const bcrypt=require('bcryptjs');
 const Admin=require('../models/admin');
- const Doctor=require('../models/doctor');
+ const {Doctor}=require('../models/doctor');
  const Patient=require('../models/patient');
 //Creates admin directly from static code below 
 router.post("/register",(req,res)=>{
@@ -58,6 +58,10 @@ router.get("/doctors/view",async function(req,res){
   //for verifying the registration requests from doctors 
 router.put('/doctors/update/:id',function(req,res){
 const did=req.params.id;
+
+console.log(did);
+
+console.log(Doctor);
 Doctor.updateOne({_id:did},{status:1})
 .then(function(result){
     res.status(201).json({success:"true",message:"Doctor Verfied Successfully"})
