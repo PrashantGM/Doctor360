@@ -54,14 +54,28 @@ router.get("/doctors/view",async function(req,res){
         res.status(201).json({success:"false",message:"Error loading results"});
     })
   })
-  
+  router.get("/doctors/view/pending",async function(req,res){
+    const logDoctor= await Doctor.find({status:0})
+      .then((result)=>{
+        res.status(201).json({success:"true",data:result});
+      })
+      .catch((e)=>{
+        res.status(201).json({success:"false",message:"Error loading results"});
+    })
+  })
+  router.get("/doctors/view/verified",async function(req,res){
+    const logDoctor= await Doctor.find({status:1})
+      .then((result)=>{
+        res.status(201).json({success:"true",data:result});
+      })
+      .catch((e)=>{
+        res.status(201).json({success:"false",message:"Error loading results"});
+    })
+  })
   //for verifying the registration requests from doctors 
 router.put('/doctors/update/:id',function(req,res){
 const did=req.params.id;
 
-console.log(did);
-
-console.log(Doctor);
 Doctor.updateOne({_id:did},{status:1})
 .then(function(result){
     res.status(201).json({success:"true",message:"Doctor Verfied Successfully"})
