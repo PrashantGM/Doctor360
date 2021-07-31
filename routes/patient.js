@@ -18,7 +18,7 @@ router.post("/register",async (req,res)=>{
         res.status(201).json({success:"true",message:"Patient Successfully Registered"});
       })
       .catch((e)=>{ 
-        res.status(201).json({success:"false",message:"Registration Error"});
+        res.status(201).json({success:"false",message:e.message});
       })
      
     });
