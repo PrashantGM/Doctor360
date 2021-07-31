@@ -18,6 +18,8 @@ router.post("/register",async (req,res)=>{
         res.status(201).json({success:"true",message:"Patient Successfully Registered"});
       })
       .catch((e)=>{ 
+        if(e.name==="MongoError" && e.code===11000 && e.keyPattern.email) return res.status(201).json({success:"false",message:"Error!!!Account with this email already exists"});  
+        if(e.name==="MongoError" && e.code===11000 && e.keyPattern.mobile) return res.status(201).json({success:"false",message:"Error!!!Duplicate mobile number"});  
         res.status(201).json({success:"false",message:e.message});
       })
      
