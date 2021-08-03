@@ -94,4 +94,17 @@ router.get("/patients/view",async function(req,res){
   })
 })
 
+router.delete('/admin/doctors/delete/:id',function(req,res)
+{
+    const did=req.params.id;
+    Doctor.deleteOne({_id:did})
+    .then(function(result){
+        res.status(201).json({message:"Rejected and Deleted from system"})
+    })
+    .catch(function(err){
+        res.status(201).json({message:err});
+    })
+});
+
+
 module.exports=router;
