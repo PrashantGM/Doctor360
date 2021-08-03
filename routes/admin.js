@@ -94,7 +94,7 @@ router.get("/patients/view",async function(req,res){
   })
 })
 
-router.delete('/admin/doctors/reject/:id',function(req,res)
+router.delete('/doctors/reject/:id',function(req,res)
 {
     const did=req.params.id;
     Doctor.deleteOne({_id:did})
