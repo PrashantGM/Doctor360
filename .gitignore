@@ -3,3 +3,4 @@ combined.log
 error.log
 exceptions.log
 .env
+workspace.code-workspace
