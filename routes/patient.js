@@ -4,7 +4,7 @@ const Patient = require("../models/patient");
 const bcrypt = require("bcryptjs");
 const { upload } = require("../middlewares/uploads");
 const fs = require("fs");
-router.post("/register", upload.single("profileImg"), async (req, res) => {
+router.post("/register", async (req, res) => {
   const name = req.body.name;
   const address = req.body.address;
   const email = req.body.email;
@@ -13,8 +13,8 @@ router.post("/register", upload.single("profileImg"), async (req, res) => {
   const gender = req.body.gender;
   const bloodGroup = req.body.bloodGroup;
   const password = req.body.password;
-  const profileImg = fs.readFileSync(req.file.path, "base64");
-  fs.unlinkSync(req.file.path);
+  // const profileImg = fs.readFileSync(req.file.path, "base64");
+  // fs.unlinkSync(req.file.path);
   bcrypt.hash(password, 10, function (err, hash) {
     var pData = new Patient({
       name: name,
@@ -24,7 +24,6 @@ router.post("/register", upload.single("profileImg"), async (req, res) => {
       gender: gender,
       bloodGroup: bloodGroup,
       age: age,
-      profileImg: profileImg,
       password: hash,
     });
     pData
