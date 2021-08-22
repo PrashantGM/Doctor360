@@ -6,10 +6,11 @@ const bcrypt = require("bcryptjs");
 const { upload } = require("../middlewares/uploads");
 router.post(
   "/register",
-  upload.fields([
-    { name: "documentImage", maxCount: 1 },
-    { name: "profileImg", maxCount: 1 },
-  ]),
+  // upload.fields([
+  //   { name: "documentImage", maxCount: 1 },
+  //   { name: "profileImg", maxCount: 1 },
+  // ]),
+  upload.single("documentImage"),
   async (req, res) => {
     const error = await validateDoctor(req.body);
     if (error.message) res.status(400).send(error.message);
@@ -22,17 +23,15 @@ router.post(
     const password = req.body.password;
 
     //converting images into binary base64 format
-    const documentImage = fs.readFileSync(
-      req.files["documentImage"][0].path,
-      "base64"
-    );
-    const profileImg = fs.readFileSync(
-      req.files["profileImg"][0].path,
-      "base64"
-    );
+    const documentImage = fs.readFileSync(req.file.path, "base64");
+    // const profileImg = fs.readFileSync(
+    //   req.files["profileImg"][0].path,
+    //   "base64"
+    // );
     //Removing temporarily saved files
-    fs.unlinkSync(req.files["documentImage"][0].path);
-    fs.unlinkSync(req.files["profileImg"][0].path);
+
+    fs.unlinkSync(req.file.path);
+    // fs.unlinkSync(req.files["profileImg"][0].path);
 
     bcrypt.hash(password, 10, (err, hash) => {
       var dData = new Doctor({
@@ -43,7 +42,6 @@ router.post(
         specialization: specialization,
         qualification: qualification,
         documentImage: documentImage,
-        profileImg: profileImg,
         password: hash,
       });
       dData
