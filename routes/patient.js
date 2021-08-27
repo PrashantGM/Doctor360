@@ -151,20 +151,21 @@ router.put("/changepassword/:id", function (req, res) {
         return res
           .status(201)
           .json({ success: "false", message: "Incorrect Current Password" });
+      } else {
+        bcrypt.hash(password, 10, function (err, hash) {
+          Patient.updateOne({ _id: pid }, { password: hash })
+            .then(function (result) {
+              res.status(201).json({
+                success: "true",
+                message: "Password Changed Successfully",
+              });
+            })
+            .catch(function (e) {
+              res.status(201).json({ success: "false", message: e });
+            });
+        });
       }
     });
-  });
-  console.log("Inbetween now");
-  bcrypt.hash(password, 10, function (err, hash) {
-    Patient.updateOne({ _id: pid }, { password: hash })
-      .then(function (result) {
-        res
-          .status(201)
-          .json({ success: "true", message: "Password Changed Successfully" });
-      })
-      .catch(function (e) {
-        res.status(201).json({ success: "false", message: e });
-      });
   });
 });
 module.exports = router;
