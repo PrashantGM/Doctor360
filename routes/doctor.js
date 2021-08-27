@@ -2,15 +2,25 @@ const express = require("express");
 const router = express.Router();
 const fs = require("fs");
 const { Doctor, validateDoctor } = require("../models/doctor");
+// const Image = require("../models/image");
 const bcrypt = require("bcryptjs");
 const { upload } = require("../middlewares/uploads");
+
+// router.post("/imageupload", (req, res) => {
+//   console.log("running");
+//   const encodedImage = req.body.documentImage;
+//   // console.log(encodeImage);
+//   // var imagee = new Image({ img: encodedImage });
+//   // imagee.save();
+//   console.log(encodedImage);
+//   res.send("Success");
+// });
 router.post(
   "/register",
   // upload.fields([
   //   { name: "documentImage", maxCount: 1 },
   //   { name: "profileImg", maxCount: 1 },
   // ]),
-  upload.single("documentImage"),
   async (req, res) => {
     const error = await validateDoctor(req.body);
     if (error.message) res.status(400).send(error.message);
@@ -21,16 +31,16 @@ router.post(
     const specialization = req.body.specialization;
     const qualification = req.body.qualification;
     const password = req.body.password;
-
+    const documentImage = req.body.documentImage;
     //converting images into binary base64 format
-    const documentImage = fs.readFileSync(req.file.path, "base64");
+    // const documentImage = fs.readFileSync(req.file.path, "base64");
     // const profileImg = fs.readFileSync(
     //   req.files["profileImg"][0].path,
     //   "base64"
     // );
     //Removing temporarily saved files
 
-    fs.unlinkSync(req.file.path);
+    // fs.unlinkSync(req.file.path);
     // fs.unlinkSync(req.files["profileImg"][0].path);
 
     bcrypt.hash(password, 10, (err, hash) => {
