@@ -91,42 +91,39 @@ router.get("/view/:id", async function (req, res) {
     });
 });
 
-router.put(
-  "/updateprofile/:id",
-  upload.single("profileImg"),
-  function (req, res) {
-    const name = req.body.name;
-    const address = req.body.address;
-    const mobile = req.body.mobile;
-    const age = req.body.age;
-    const gender = req.body.gender;
-    const bloodGroup = req.body.bloodGroup;
-    const pid = req.params.id;
-    const profileImg = fs.readFileSync(req.file.path, "base64");
+router.put("/updateprofile/:id", function (req, res) {
+  const name = req.body.name;
+  const address = req.body.address;
+  const mobile = req.body.mobile;
+  const age = req.body.age;
+  const gender = req.body.gender;
+  const bloodGroup = req.body.bloodGroup;
+  const pid = req.params.id;
+  const profileImg = req.body.profileImg;
+  // const profileImg = fs.readFileSync(req.file.path, "base64");
 
-    fs.unlinkSync(req.file.path);
-    Patient.updateOne(
-      { _id: pid },
-      {
-        name: name,
-        address: address,
-        mobile: mobile,
-        gender: gender,
-        age: age,
-        bloodGroup: bloodGroup,
-        profileImg: profileImg,
-      }
-    )
-      .then(function (result) {
-        res
-          .status(201)
-          .json({ success: "true", message: `Profile of ${name}  Updated` });
-      })
-      .catch(function (e) {
-        res.status(201).json({ success: "false", message: e });
-      });
-  }
-);
+  // fs.unlinkSync(req.file.path);
+  Patient.updateOne(
+    { _id: pid },
+    {
+      name: name,
+      address: address,
+      mobile: mobile,
+      gender: gender,
+      age: age,
+      bloodGroup: bloodGroup,
+      profileImg: profileImg,
+    }
+  )
+    .then(function (result) {
+      res
+        .status(201)
+        .json({ success: "true", message: `Profile of ${name}  Updated` });
+    })
+    .catch(function (e) {
+      res.status(201).json({ success: "false", message: e });
+    });
+});
 
 //for password update
 router.get("/viewpassword/:id", async function (req, res) {

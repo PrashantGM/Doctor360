@@ -10,7 +10,8 @@ const adminroute = require("./routes/admin");
 
 //Middlewares
 server.use(express.json());
-server.use(express.urlencoded({ extended: true }));
+server.use(express.json({ limit: "50mb" }));
+server.use(express.urlencoded({ limit: "50mb", extended: true }));
 server.use("/patient", patientroute);
 server.use("/doctor", doctorroute);
 server.use("/admin", adminroute);

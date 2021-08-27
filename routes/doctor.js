@@ -143,25 +143,27 @@ router.get("/view/:id", async function (req, res) {
 
 router.put(
   "/updateprofile/:id",
-  upload.fields([
-    { name: "documentImage", maxCount: 1 },
-    { name: "profileImg", maxCount: 1 },
-  ]),
+  // upload.fields([
+  //   { name: "documentImage", maxCount: 1 },
+  //   { name: "profileImg", maxCount: 1 },
+  // ]),
   function (req, res) {
     const mobile = req.body.mobile;
     const name = req.body.name;
+    const documentImage = req.body.documentImage;
+    const profileImg = req.body.profileImg;
     //converting images into binary base64 format
-    const documentImage = fs.readFileSync(
-      req.files["documentImage"][0].path,
-      "base64"
-    );
-    const profileImg = fs.readFileSync(
-      req.files["profileImg"][0].path,
-      "base64"
-    );
+    // const documentImage = fs.readFileSync(
+    //   req.files["documentImage"][0].path,
+    //   "base64"
+    // );
+    // const profileImg = fs.readFileSync(
+    //   req.files["profileImg"][0].path,
+    //   "base64"
+    // );
     //Removing temporarily saved files
-    fs.unlinkSync(req.files["documentImage"][0].path);
-    fs.unlinkSync(req.files["profileImg"][0].path);
+    // fs.unlinkSync(req.files["documentImage"][0].path);
+    // fs.unlinkSync(req.files["profileImg"][0].path);
     const gender = req.body.gender;
     const specialization = req.body.specialization;
     const qualification = req.body.qualification;
@@ -214,20 +216,21 @@ router.put("/changepassword/:id", function (req, res) {
         return res
           .status(201)
           .json({ success: "false", message: "Incorrect Current Password" });
+      } else {
+        bcrypt.hash(password, 10, function (err, hash) {
+          Doctor.updateOne({ _id: did }, { password: hash })
+            .then(function (result) {
+              res.status(201).json({
+                success: "true",
+                message: "Password Changed Successfully",
+              });
+            })
+            .catch(function (e) {
+              res.status(201).json({ success: "false", message: e });
+            });
+        });
       }
     });
-  });
-  console.log("Inbetween now");
-  bcrypt.hash(password, 10, function (err, hash) {
-    Doctor.updateOne({ _id: did }, { password: hash })
-      .then(function (result) {
-        res
-          .status(201)
-          .json({ success: "true", message: "Password Changed Successfully" });
-      })
-      .catch(function (e) {
-        res.status(201).json({ success: "false", message: e });
-      });
   });
 });
 

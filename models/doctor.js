@@ -54,6 +54,7 @@ const validateDoctor = (doctor) => {
     email: yup.string().required().email(),
     mobile: yup.string().required(),
     gender: yup.string().required(),
+    documentImage: yup.string().required("Plz add image"),
     specialization: yup.string().required(),
     password: yup.string().required(),
   });
