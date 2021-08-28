@@ -35,7 +35,10 @@ const PatientSchema = new mongoose.Schema({
     type: String,
     required: true,
   },
-  profileImg: String,
+  profileImg: {
+    type: String,
+    default: null,
+  },
 });
 
 module.exports = new mongoose.model("Patient", PatientSchema);

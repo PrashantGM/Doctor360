@@ -46,7 +46,10 @@ const DoctorSchema = new mongoose.Schema({
     type: String,
     required: true,
   },
-  profileImg: String,
+  profileImg: {
+    type: String,
+    default: null,
+  },
 });
 const validateDoctor = (doctor) => {
   const schema = yup.object().shape({
