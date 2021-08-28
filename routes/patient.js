@@ -139,11 +139,11 @@ router.get("/viewpassword/:id", async function (req, res) {
     });
 });
 router.put("/changepassword/:id", function (req, res) {
-  const currrentpassword = req.body.currrentpassword;
+  const currentpassword = req.body.currentpassword;
   const password = req.body.password;
   const pid = req.params.id;
   Patient.findOne({ _id: pid }).then((pdata) => {
-    bcrypt.compare(currrentpassword, pdata.password, function (err, result) {
+    bcrypt.compare(currentpassword, pdata.password, function (err, result) {
       if (result == false) {
         return res
           .status(201)

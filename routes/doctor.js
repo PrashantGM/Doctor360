@@ -207,11 +207,11 @@ router.get("/viewpassword/:id", async function (req, res) {
     });
 });
 router.put("/changepassword/:id", function (req, res) {
-  const currrentpassword = req.body.currrentpassword;
+  const currentpassword = req.body.currentpassword;
   const password = req.body.password;
   const did = req.params.id;
   Doctor.findOne({ _id: did }).then((ddata) => {
-    bcrypt.compare(currrentpassword, ddata.password, function (err, result) {
+    bcrypt.compare(currentpassword, ddata.password, function (err, result) {
       if (result == false) {
         return res
           .status(201)
