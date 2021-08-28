@@ -48,7 +48,7 @@ const DoctorSchema = new mongoose.Schema({
   },
   profileImg: {
     type: String,
-    default: null,
+    default: "null",
   },
 });
 const validateDoctor = (doctor) => {
