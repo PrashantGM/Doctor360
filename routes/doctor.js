@@ -184,7 +184,7 @@ router.put(
       .then(function (result) {
         res.status(201).json({
           success: "true",
-          message: `Profile of Dr. ${name}  Updated`,
+          message: `Profile Updated Successfully`,
         });
       })
       .catch(function (e) {

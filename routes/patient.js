@@ -118,7 +118,7 @@ router.put("/updateprofile/:id", function (req, res) {
     .then(function (result) {
       res
         .status(201)
-        .json({ success: "true", message: `Profile of ${name}  Updated` });
+        .json({ success: "true", message: `Profile Updated Successfully` });
     })
     .catch(function (e) {
       res.status(201).json({ success: "false", message: e });
