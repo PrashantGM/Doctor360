@@ -41,6 +41,7 @@ const DoctorSchema = new mongoose.Schema({
   // },
   documentImage: {
     type: String,
+    default: null,
   },
   password: {
     type: String,
@@ -48,7 +49,7 @@ const DoctorSchema = new mongoose.Schema({
   },
   profileImg: {
     type: String,
-    default: "null",
+    default: null,
   },
 });
 const validateDoctor = (doctor) => {
@@ -57,7 +58,7 @@ const validateDoctor = (doctor) => {
     email: yup.string().required().email(),
     mobile: yup.string().required(),
     gender: yup.string().required(),
-    documentImage: yup.string().required("Plz add image"),
+    // documentImage: yup.string().required("Plz add image"),
     specialization: yup.string().required(),
     password: yup.string().required(),
   });
