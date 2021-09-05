@@ -117,29 +117,32 @@ router.post("/login", function (req, res) {
     });
 });
 
-router.get("/viewappointments/requests", async function (req, res) {
-  const logDoctor = await Appointment.find({ requestStatus: 0 })
-    .populate("patientId")
+router.get("/viewappointments/requests/:id", async function (req, res) {
+  const doctorId = req.params.id;
+  const logDoctor = await Appointment.find({
+    doctorId: doctorId,
+    requestStatus: 1,
+  })
+    .populate("patientId", ["name"])
     .exec((err, result) => {
       if (err) return handleError(err);
       res.status(201).json({ success: "true", data: result });
     });
-  // .catch((e) => {
-  //   res
-  //     .status(201)
-  //     .json({ success: "false", message: "Error loading results" });
-  // });
 });
 
-router.get("/viewappointments/accepted", async function (req, res) {
-  const logDoctor = await Appointment.find({ requestStatus: 1 })
-    .populate("patientId")
+router.get("/viewappointments/accepted/:id", async function (req, res) {
+  const doctorId = req.params.id;
+  const logDoctor = await Appointment.find({
+    doctorId: doctorId,
+    requestStatus: 1,
+  })
+    .populate("patientId", ["name"])
     .exec((err, result) => {
       if (err) return handleError(err);
       res.status(201).json({ success: "true", data: result });
     });
 });
-//for verifying the registration requests from doctors
+
 router.put("/acceptappointments/:id", function (req, res) {
   const patientId = req.params.id;
   Appointment.updateOne({ patientId: patientId }, { requestStatus: 1 })
