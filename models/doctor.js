@@ -71,5 +71,6 @@ const validateDoctor = (doctor) => {
       };
     });
 };
+
 exports.Doctor = new mongoose.model("Doctor", DoctorSchema);
 exports.validateDoctor = validateDoctor;

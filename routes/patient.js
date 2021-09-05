@@ -1,6 +1,7 @@
 const express = require("express");
 const router = express.Router();
 const Patient = require("../models/patient");
+const Appointment = require("../models/appointment");
 const bcrypt = require("bcryptjs");
 const { upload } = require("../middlewares/uploads");
 const fs = require("fs");
@@ -49,6 +50,38 @@ router.post("/register", async (req, res) => {
       });
   });
 });
+router.post("/appointment", async (req, res) => {
+  const patientId = req.body.patientId;
+  const doctorId = req.body.doctorId;
+  const description = req.body.description;
+  const date = req.body.date;
+  const time = req.body.time;
+  const dateTime = date + " " + time;
+  console.log(patientId);
+  console.log(dateTime);
+  var apnt = new Appointment({
+    patientId: patientId,
+    doctorId: doctorId,
+    dateTime: dateTime,
+    description: description,
+  });
+
+  apnt
+    .save()
+    .then(() => {
+      res.status(201).json({
+        success: "true",
+        message: "Appointment Request Sent",
+      });
+    })
+    .catch((e) => {
+      res.status(201).json({
+        success: "false",
+        message: e,
+      });
+    });
+});
+
 router.post("/login", function (req, res) {
   const email = req.body.email;
   const password = req.body.password;

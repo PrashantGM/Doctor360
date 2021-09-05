@@ -2,6 +2,7 @@ const express = require("express");
 const router = express.Router();
 const fs = require("fs");
 const { Doctor, validateDoctor } = require("../models/doctor");
+const Appointment = require("../models/appointment");
 // const Image = require("../models/image");
 const bcrypt = require("bcryptjs");
 const { upload } = require("../middlewares/uploads");
@@ -115,6 +116,46 @@ router.post("/login", function (req, res) {
         .json({ success: "false", data: data, message: e.message });
     });
 });
+
+router.get("/viewappointments/requests", async function (req, res) {
+  const logDoctor = await Appointment.find({ requestStatus: 0 })
+    .populate("patientId")
+    .exec((err, result) => {
+      if (err) return handleError(err);
+      res.status(201).json({ success: "true", data: result });
+    });
+  // .catch((e) => {
+  //   res
+  //     .status(201)
+  //     .json({ success: "false", message: "Error loading results" });
+  // });
+});
+
+router.get("/viewappointments/accepted", async function (req, res) {
+  const logDoctor = await Appointment.find({ requestStatus: 1 })
+    .populate("patientId")
+    .exec((err, result) => {
+      if (err) return handleError(err);
+      res.status(201).json({ success: "true", data: result });
+    });
+});
+//for verifying the registration requests from doctors
+router.put("/acceptappointments/:id", function (req, res) {
+  const patientId = req.params.id;
+  Appointment.updateOne({ patientId: patientId }, { requestStatus: 1 })
+    .then(function (result) {
+      res
+        .status(201)
+        .json({ success: "true", message: "Appointment Confirmed" });
+    })
+    .catch(function (e) {
+      res.status(201).json({
+        success: "false",
+        message: "Error!!!",
+      });
+    });
+});
+
 router.get("/view", async function (req, res) {
   const logDoctor = await Doctor.find()
     .then((result) => {
