@@ -54,15 +54,13 @@ router.post("/appointment", async (req, res) => {
   const patientId = req.body.patientId;
   const doctorId = req.body.doctorId;
   const description = req.body.description;
-  const date = req.body.date;
+  const datee = req.body.date;
   const time = req.body.time;
-  const dateTime = date + " " + time;
-  console.log(patientId);
-  console.log(dateTime);
   var apnt = new Appointment({
     patientId: patientId,
     doctorId: doctorId,
-    dateTime: dateTime,
+    date: datee,
+    time: time,
     description: description,
   });
 
@@ -110,6 +108,31 @@ router.post("/login", function (req, res) {
     });
 });
 
+router.get("/viewappointments/requests/:id", async function (req, res) {
+  const patientId = req.params.id;
+  const logDoctor = await Appointment.find({
+    patientId: patientId,
+    requestStatus: 0,
+  })
+    .populate("doctorId", ["name"])
+    .exec((err, result) => {
+      if (err) return handleError(err);
+      res.status(201).json({ success: "true", data: result });
+    });
+});
+
+router.get("/viewappointments/accepted/:id", async function (req, res) {
+  const patientId = req.params.id;
+  const logDoctor = await Appointment.find({
+    patientId: patientId,
+    requestStatus: 1,
+  })
+    .populate("doctorId", ["name"])
+    .exec((err, result) => {
+      if (err) return handleError(err);
+      res.status(201).json({ success: "true", data: result });
+    });
+});
 //display patient details by id
 router.get("/view/:id", async function (req, res) {
   const id = req.params.id;

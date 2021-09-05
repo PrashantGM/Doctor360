@@ -17,9 +17,13 @@ const appointmentSchema = new Schema({
     type: String,
     default: null,
   },
-  dateTime: {
+  date: {
     type: String,
-    required: true,
+    required: [true, "Please add date"],
+  },
+  time: {
+    type: String,
+    required: [true, "Please add time"],
   },
 });
 
