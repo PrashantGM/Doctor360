@@ -121,7 +121,7 @@ router.get("/viewappointments/requests/:id", async function (req, res) {
   const doctorId = req.params.id;
   const logDoctor = await Appointment.find({
     doctorId: doctorId,
-    requestStatus: 1,
+    requestStatus: 0,
   })
     .populate("patientId", ["name", "profileImg"])
     .exec((err, result) => {
