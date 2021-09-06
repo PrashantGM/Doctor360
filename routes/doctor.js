@@ -123,7 +123,7 @@ router.get("/viewappointments/requests/:id", async function (req, res) {
     doctorId: doctorId,
     requestStatus: 1,
   })
-    .populate("patientId", ["name"])
+    .populate("patientId", ["name", "profileImg"])
     .exec((err, result) => {
       if (err) return handleError(err);
       res.status(201).json({ success: "true", data: result });
@@ -136,7 +136,7 @@ router.get("/viewappointments/accepted/:id", async function (req, res) {
     doctorId: doctorId,
     requestStatus: 1,
   })
-    .populate("patientId", ["name"])
+    .populate("patientId", ["name", "profileImg"])
     .exec((err, result) => {
       if (err) return handleError(err);
       res.status(201).json({ success: "true", data: result });
