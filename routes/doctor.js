@@ -145,16 +145,29 @@ router.get("/viewappointments/accepted/:id", async function (req, res) {
 
 router.put("/acceptappointments/:id", function (req, res) {
   const patientId = req.params.id;
-  Appointment.updateOne({ patientId: patientId }, { requestStatus: 1 })
+  Appointment.findOne({ patientId: patientId })
     .then(function (result) {
-      res
-        .status(201)
-        .json({ success: "true", message: "Appointment Confirmed" });
+      if (result == null)
+        return res
+          .status(201)
+          .json({ success: "false", message: "This PatientId doesn't exist" });
+      Appointment.updateOne({ patientId: patientId }, { requestStatus: 1 })
+        .then(function (result) {
+          res
+            .status(201)
+            .json({ success: "true", message: "Appointment Confirmed" });
+        })
+        .catch(function (e) {
+          res.status(201).json({
+            success: "false",
+            message: "Error!!!",
+          });
+        });
     })
     .catch(function (e) {
       res.status(201).json({
         success: "false",
-        message: "Error!!!",
+        message: "Error",
       });
     });
 });
