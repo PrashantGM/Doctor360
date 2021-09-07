@@ -132,7 +132,8 @@ router.get("/viewappointments/requests/:id", async function (req, res) {
 });
 router.delete("/rejectappointment/:id", function (req, res) {
   const patientId = req.params.id;
-  Appointment.deleteOne({ patientId: patientId })
+  const doctorId = req.body.doctorId;
+  Appointment.deleteOne({ patientId: patientId, doctorId: doctorId })
     .then(function (result) {
       res
         .status(201)
@@ -158,13 +159,17 @@ router.get("/viewappointments/accepted/:id", async function (req, res) {
 
 router.put("/acceptappointments/:id", function (req, res) {
   const patientId = req.params.id;
-  Appointment.findOne({ patientId: patientId })
+  const doctorId = req.body.doctorId;
+  Appointment.findOne({ patientId: patientId, doctorId: doctorId })
     .then(function (result) {
       if (result == null)
         return res
           .status(201)
           .json({ success: "false", message: "This PatientId doesn't exist" });
-      Appointment.updateOne({ patientId: patientId }, { requestStatus: 1 })
+      Appointment.updateOne(
+        { patientId: patientId, doctorId: doctorId },
+        { requestStatus: 1 }
+      )
         .then(function (result) {
           res
             .status(201)
