@@ -150,7 +150,7 @@ router.get("/viewappointments/requests/:id", async function (req, res) {
     patientId: patientId,
     requestStatus: 0,
   })
-    .populate("doctorId", ["name"])
+    .populate("doctorId", ["name", "profileImg"])
     .exec((err, result) => {
       if (err) return handleError(err);
       res.status(201).json({ success: "true", data: result });
@@ -163,7 +163,7 @@ router.get("/viewappointments/accepted/:id", async function (req, res) {
     patientId: patientId,
     requestStatus: 1,
   })
-    .populate("doctorId", ["name"])
+    .populate("doctorId", ["name", "profileImg"])
     .exec((err, result) => {
       if (err) return handleError(err);
       res.status(201).json({ success: "true", data: result });
@@ -288,7 +288,7 @@ router.get("/viewchats/requests/:id", async function (req, res) {
     patientId: patientId,
     requestStatus: 0,
   })
-    .populate("doctorId", ["name"])
+    .populate("doctorId", ["name", "profileImg"])
     .exec((err, result) => {
       if (err) return handleError(err);
       res.status(201).json({ success: "true", data: result });
@@ -301,7 +301,7 @@ router.get("/viewchats/accepted/:id", async function (req, res) {
     patientId: patientId,
     requestStatus: 1,
   })
-    .populate("doctorId", ["name"])
+    .populate("doctorId", ["name", "profileImg"])
     .exec((err, result) => {
       if (err) return handleError(err);
       res.status(201).json({ success: "true", data: result });
