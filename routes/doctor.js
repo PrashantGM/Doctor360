@@ -134,7 +134,9 @@ router.delete("/rejectappointment/:id", function (req, res) {
   const patientId = req.params.id;
   Appointment.deleteOne({ patientId: patientId })
     .then(function (result) {
-      res.status(201).json({ message: "Rejected and Deleted from system" });
+      res
+        .status(201)
+        .json({ success: "true", message: "Rejected and Deleted from system" });
     })
     .catch(function (err) {
       res.status(201).json({ message: err });
@@ -319,7 +321,9 @@ router.delete("/rejectchat/:id", function (req, res) {
   const patientId = req.params.id;
   ChatRequest.deleteOne({ patientId: patientId })
     .then(function (result) {
-      res.status(201).json({ message: "Rejected and Deleted from system" });
+      res
+        .status(201)
+        .json({ success: "true", message: "Rejected and Deleted from system" });
     })
     .catch(function (err) {
       res.status(201).json({ message: err });
