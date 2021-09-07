@@ -3,6 +3,7 @@ const router = express.Router();
 const fs = require("fs");
 const { Doctor, validateDoctor } = require("../models/doctor");
 const Appointment = require("../models/appointment");
+const ChatRequest = require("../models/chatRequest");
 // const Image = require("../models/image");
 const bcrypt = require("bcryptjs");
 const { upload } = require("../middlewares/uploads");
@@ -127,6 +128,16 @@ router.get("/viewappointments/requests/:id", async function (req, res) {
     .exec((err, result) => {
       if (err) return handleError(err);
       res.status(201).json({ success: "true", data: result });
+    });
+});
+router.delete("/rejectappointment/:id", function (req, res) {
+  const patientId = req.params.id;
+  Appointment.deleteOne({ patientId: patientId })
+    .then(function (result) {
+      res.status(201).json({ message: "Rejected and Deleted from system" });
+    })
+    .catch(function (err) {
+      res.status(201).json({ message: err });
     });
 });
 
@@ -289,6 +300,70 @@ router.put("/changepassword/:id", function (req, res) {
       }
     });
   });
+});
+
+//for chat request
+router.get("/viewchats/requests/:id", async function (req, res) {
+  const doctorId = req.params.id;
+  const logDoctor = await ChatRequest.find({
+    doctorId: doctorId,
+    requestStatus: 0,
+  })
+    .populate("patientId", ["name", "profileImg"])
+    .exec((err, result) => {
+      if (err) return handleError(err);
+      res.status(201).json({ success: "true", data: result });
+    });
+});
+router.delete("/rejectchat/:id", function (req, res) {
+  const patientId = req.params.id;
+  ChatRequest.deleteOne({ patientId: patientId })
+    .then(function (result) {
+      res.status(201).json({ message: "Rejected and Deleted from system" });
+    })
+    .catch(function (err) {
+      res.status(201).json({ message: err });
+    });
+});
+
+router.get("/viewchats/accepted/:id", async function (req, res) {
+  const doctorId = req.params.id;
+  const logDoctor = await ChatRequest.find({
+    doctorId: doctorId,
+    requestStatus: 1,
+  })
+    .populate("patientId", ["name", "profileImg"])
+    .exec((err, result) => {
+      if (err) return handleError(err);
+      res.status(201).json({ success: "true", data: result });
+    });
+});
+
+router.put("/acceptchat/:id", function (req, res) {
+  const patientId = req.params.id;
+  ChatRequest.findOne({ patientId: patientId })
+    .then(function (result) {
+      if (result == null)
+        return res
+          .status(201)
+          .json({ success: "false", message: "This PatientId doesn't exist" });
+      ChatRequest.updateOne({ patientId: patientId }, { requestStatus: 1 })
+        .then(function (result) {
+          res.status(201).json({ success: "true", message: "Chat Accepted" });
+        })
+        .catch(function (e) {
+          res.status(201).json({
+            success: "false",
+            message: "Error!!!",
+          });
+        });
+    })
+    .catch(function (e) {
+      res.status(201).json({
+        success: "false",
+        message: "Error",
+      });
+    });
 });
 
 module.exports = router;

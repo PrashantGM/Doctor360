@@ -2,6 +2,7 @@ const express = require("express");
 const router = express.Router();
 const Patient = require("../models/patient");
 const Appointment = require("../models/appointment");
+const ChatRequest = require("../models/chatRequest");
 const bcrypt = require("bcryptjs");
 const { upload } = require("../middlewares/uploads");
 const fs = require("fs");
@@ -80,6 +81,41 @@ router.post("/appointment", async (req, res) => {
     });
 });
 
+//Chat
+router.post("/chat/:appointmentId", async (req, res) => {
+  const appointmentId = req.params.appointmentId;
+  const message = req.body.message;
+  const senderDoctorId = req.body.senderDoctorId;
+  const senderPatientId = req.body.senderPatientId;
+  if (senderDoctorId == undefined) {
+    var conv = new Conversation({
+      appointmentId: appointmentId,
+      message: message,
+      senderPatientId: senderPatientId,
+    });
+  } else {
+    var conv = new Conversation({
+      appointmentId: appointmentId,
+      message: message,
+      senderDoctorId: senderDoctorId,
+    });
+  }
+
+  conv
+    .save()
+    .then(() => {
+      res.status(201).json({
+        success: "true",
+        message: "Message send successfully",
+      });
+    })
+    .catch((e) => {
+      res.status(201).json({
+        success: "false",
+        message: e,
+      });
+    });
+});
 router.post("/login", function (req, res) {
   const email = req.body.email;
   const password = req.body.password;
@@ -221,4 +257,55 @@ router.put("/changepassword/:id", function (req, res) {
     });
   });
 });
+
+//Chat request
+router.post("/chatrequest", async (req, res) => {
+  const patientId = req.body.patientId;
+  const doctorId = req.body.doctorId;
+  var chRq = new ChatRequest({
+    patientId: patientId,
+    doctorId: doctorId,
+  });
+  chRq
+    .save()
+    .then(() => {
+      res.status(201).json({
+        success: "true",
+        message: "Chat Request Sent",
+      });
+    })
+    .catch((e) => {
+      res.status(201).json({
+        success: "false",
+        message: e,
+      });
+    });
+});
+
+router.get("/viewchats/requests/:id", async function (req, res) {
+  const patientId = req.params.id;
+  const logDoctor = await ChatRequest.find({
+    patientId: patientId,
+    requestStatus: 0,
+  })
+    .populate("doctorId", ["name"])
+    .exec((err, result) => {
+      if (err) return handleError(err);
+      res.status(201).json({ success: "true", data: result });
+    });
+});
+
+router.get("/viewchats/accepted/:id", async function (req, res) {
+  const patientId = req.params.id;
+  const logDoctor = await ChatRequest.find({
+    patientId: patientId,
+    requestStatus: 1,
+  })
+    .populate("doctorId", ["name"])
+    .exec((err, result) => {
+      if (err) return handleError(err);
+      res.status(201).json({ success: "true", data: result });
+    });
+});
+
 module.exports = router;
