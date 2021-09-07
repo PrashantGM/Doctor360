@@ -324,7 +324,8 @@ router.get("/viewchats/requests/:id", async function (req, res) {
 });
 router.delete("/rejectchat/:id", function (req, res) {
   const patientId = req.params.id;
-  ChatRequest.deleteOne({ patientId: patientId })
+  const doctorId = req.body.doctorId;
+  ChatRequest.deleteOne({ patientId: patientId, doctorId: doctorId })
     .then(function (result) {
       res
         .status(201)
