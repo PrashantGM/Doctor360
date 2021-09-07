@@ -350,13 +350,17 @@ router.get("/viewchats/accepted/:id", async function (req, res) {
 
 router.put("/acceptchat/:id", function (req, res) {
   const patientId = req.params.id;
-  ChatRequest.findOne({ patientId: patientId })
+  const doctorId = req.body.doctorId;
+  ChatRequest.findOne({ patientId: patientId, doctorId: doctorId })
     .then(function (result) {
       if (result == null)
         return res
           .status(201)
           .json({ success: "false", message: "This PatientId doesn't exist" });
-      ChatRequest.updateOne({ patientId: patientId }, { requestStatus: 1 })
+      ChatRequest.updateOne(
+        { patientId: patientId, doctorId: doctorId },
+        { requestStatus: 1 }
+      )
         .then(function (result) {
           res.status(201).json({ success: "true", message: "Chat Accepted" });
         })
