@@ -164,10 +164,7 @@ router.put("/acceptappointments/:id", function (req, res) {
     _id: appointmentId,
   })
     .then(function (result) {
-      Appointment.updateOne(
-        { appointmentId: appointmentId },
-        { requestStatus: 1 }
-      )
+      Appointment.updateOne({ _id: appointmentId }, { requestStatus: 1 })
         .then(function (result) {
           res
             .status(201)
