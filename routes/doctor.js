@@ -318,9 +318,8 @@ router.get("/viewchats/requests/:id", async function (req, res) {
     });
 });
 router.delete("/rejectchat/:id", function (req, res) {
-  const patientId = req.params.id;
-  const doctorId = req.body.doctorId;
-  ChatRequest.deleteOne({ patientId: patientId, doctorId: doctorId })
+  const chatId = req.params.id;
+  ChatRequest.deleteOne({ _id: chatId })
     .then(function (result) {
       res
         .status(201)
@@ -345,18 +344,14 @@ router.get("/viewchats/accepted/:id", async function (req, res) {
 });
 
 router.put("/acceptchat/:id", function (req, res) {
-  const patientId = req.params.id;
-  const doctorId = req.body.doctorId;
-  ChatRequest.findOne({ patientId: patientId, doctorId: doctorId })
+  const chatId = req.params.id;
+  ChatRequest.findOne({ _id: chatId })
     .then(function (result) {
       if (result == null)
         return res
           .status(201)
           .json({ success: "false", message: "This PatientId doesn't exist" });
-      ChatRequest.updateOne(
-        { patientId: patientId, doctorId: doctorId },
-        { requestStatus: 1 }
-      )
+      ChatRequest.updateOne({ _id: chatId }, { requestStatus: 1 })
         .then(function (result) {
           res.status(201).json({ success: "true", message: "Chat Accepted" });
         })
