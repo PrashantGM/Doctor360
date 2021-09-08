@@ -160,7 +160,11 @@ router.get("/viewappointments/accepted/:id", async function (req, res) {
 router.put("/acceptappointments/:id", function (req, res) {
   const patientId = req.params.id;
   const doctorId = req.body.doctorId;
-  Appointment.findOne({ patientId: patientId, doctorId: doctorId })
+  Appointment.findOne({
+    patientId: patientId,
+    doctorId: doctorId,
+    requestStatus: 0,
+  })
     .then(function (result) {
       if (result == null)
         return res
