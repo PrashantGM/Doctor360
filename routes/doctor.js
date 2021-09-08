@@ -133,7 +133,11 @@ router.get("/viewappointments/requests/:id", async function (req, res) {
 router.delete("/rejectappointment/:id", function (req, res) {
   const patientId = req.params.id;
   const doctorId = req.body.doctorId;
-  Appointment.deleteOne({ patientId: patientId, doctorId: doctorId })
+  Appointment.deleteOne({
+    patientId: patientId,
+    doctorId: doctorId,
+    requestStatus: 0,
+  })
     .then(function (result) {
       res
         .status(201)
