@@ -344,30 +344,24 @@ router.get("/viewchat", async function (req, res) {
   const logDoctor = await ChatRequest.find({
     patientId: patientId,
     doctorId: doctorId,
+    requestStatus: 1,
   })
-    .then((result) => {
+    .populate("doctorId", ["name", "profileImg"])
+    .exec((err, result) => {
+      if (err) return handleError(err);
       res.status(201).json({ success: "true", data: result });
-    })
-    .catch((e) => {
-      res.status(201).json({
-        success: "false",
-        message: e,
-      });
     });
 });
 router.get("/chatroom/:id", async function (req, res) {
   const patientId = req.params.id;
   const logDoctor = await ChatRequest.find({
     patientId: patientId,
+    requestStatus: 1,
   })
-    .then((result) => {
+    .populate("doctorId", ["name", "profileImg"])
+    .exec((err, result) => {
+      if (err) return handleError(err);
       res.status(201).json({ success: "true", data: result });
-    })
-    .catch((e) => {
-      res.status(201).json({
-        success: "false",
-        message: e,
-      });
     });
 });
 
