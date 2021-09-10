@@ -262,6 +262,7 @@ router.put("/changepassword/:id", function (req, res) {
 router.post("/chatrequest", async (req, res) => {
   const patientId = req.body.patientId;
   const doctorId = req.body.doctorId;
+
   var chRq = new ChatRequest({
     patientId: patientId,
     doctorId: doctorId,
@@ -305,6 +306,68 @@ router.get("/viewchats/accepted/:id", async function (req, res) {
     .exec((err, result) => {
       if (err) return handleError(err);
       res.status(201).json({ success: "true", data: result });
+    });
+});
+
+router.post("/sendmessage", async (req, res) => {
+  const patientId = req.body.patientId;
+  const doctorId = req.body.doctorId;
+  const message = req.body.message;
+
+  ChatRequest.findOneAndUpdate(
+    {
+      patientId: patientId,
+      doctorId: doctorId,
+    },
+    {
+      lastMessage: message,
+      $push: { chat: { message: message, sender: "Patient" } },
+    }
+  )
+    .then(() => {
+      res.status(201).json({
+        success: "true",
+        message: "Message Sent",
+      });
+    })
+    .catch((e) => {
+      res.status(201).json({
+        success: "false",
+        message: e,
+      });
+    });
+});
+
+router.get("/viewchat", async function (req, res) {
+  const patientId = req.body.patientId;
+  const doctorId = req.body.doctorId;
+  const logDoctor = await ChatRequest.find({
+    patientId: patientId,
+    doctorId: doctorId,
+  })
+    .then((result) => {
+      res.status(201).json({ success: "true", data: result });
+    })
+    .catch((e) => {
+      res.status(201).json({
+        success: "false",
+        message: e,
+      });
+    });
+});
+router.get("/chatroom/:id", async function (req, res) {
+  const patientId = req.params.id;
+  const logDoctor = await ChatRequest.find({
+    patientId: patientId,
+  })
+    .then((result) => {
+      res.status(201).json({ success: "true", data: result });
+    })
+    .catch((e) => {
+      res.status(201).json({
+        success: "false",
+        message: e,
+      });
     });
 });
 

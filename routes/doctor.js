@@ -4,85 +4,53 @@ const fs = require("fs");
 const { Doctor, validateDoctor } = require("../models/doctor");
 const Appointment = require("../models/appointment");
 const ChatRequest = require("../models/chatRequest");
-// const Image = require("../models/image");
+
 const bcrypt = require("bcryptjs");
 const { upload } = require("../middlewares/uploads");
-
-// router.post("/imageupload", (req, res) => {
-//   console.log("running");
-//   const encodedImage = req.body.documentImage;
-//   // console.log(encodeImage);
-//   // var imagee = new Image({ img: encodedImage });
-//   // imagee.save();
-//   console.log(encodedImage);
-//   res.send("Success");
-// });
-router.post(
-  "/register",
-  // upload.fields([
-  //   { name: "documentImage", maxCount: 1 },
-  //   { name: "profileImg", maxCount: 1 },
-  // ]),
-  async (req, res) => {
-    const error = await validateDoctor(req.body);
-    if (error.message) res.status(400).send(error.message);
-    const name = req.body.name;
-    const email = req.body.email;
-    const mobile = req.body.mobile;
-    const gender = req.body.gender;
-    const specialization = req.body.specialization;
-    const qualification = req.body.qualification;
-    const password = req.body.password;
-    const documentImage = req.body.documentImage;
-    //converting images into binary base64 format
-    // const documentImage = fs.readFileSync(req.file.path, "base64");
-    // const profileImg = fs.readFileSync(
-    //   req.files["profileImg"][0].path,
-    //   "base64"
-    // );
-    //Removing temporarily saved files
-
-    // fs.unlinkSync(req.file.path);
-    // fs.unlinkSync(req.files["profileImg"][0].path);
-
-    bcrypt.hash(password, 10, (err, hash) => {
-      var dData = new Doctor({
-        name: name,
-        email: email,
-        mobile: mobile,
-        gender: gender,
-        specialization: specialization,
-        qualification: qualification,
-        documentImage: documentImage,
-        password: hash,
-      });
-      dData
-        .save()
-        .then(() => {
-          res
-            .status(201)
-            .json({ success: "true", message: "Successfully Registered" });
-        })
-        .catch((e) => {
-          if (e.name === "MongoError" && e.code === 11000 && e.keyPattern.email)
-            return res.status(201).json({
-              success: "false",
-              message: "Error!!!Account with this email already exists",
-            });
-          if (
-            e.name === "MongoError" &&
-            e.code === 11000 &&
-            e.keyPattern.mobile
-          )
-            return res.status(201).json({
-              success: "false",
-              message: "Error!!!Duplicate mobile number",
-            });
-          res.status(201).json({ success: "false", message: e.message });
-        });
+router.post("/register", async (req, res) => {
+  const error = await validateDoctor(req.body);
+  if (error.message) res.status(400).send(error.message);
+  const name = req.body.name;
+  const email = req.body.email;
+  const mobile = req.body.mobile;
+  const gender = req.body.gender;
+  const specialization = req.body.specialization;
+  const qualification = req.body.qualification;
+  const password = req.body.password;
+  const documentImage = req.body.documentImage;
+  bcrypt.hash(password, 10, (err, hash) => {
+    var dData = new Doctor({
+      name: name,
+      email: email,
+      mobile: mobile,
+      gender: gender,
+      specialization: specialization,
+      qualification: qualification,
+      documentImage: documentImage,
+      password: hash,
     });
-  }
-);
+    dData
+      .save()
+      .then(() => {
+        res
+          .status(201)
+          .json({ success: "true", message: "Successfully Registered" });
+      })
+      .catch((e) => {
+        if (e.name === "MongoError" && e.code === 11000 && e.keyPattern.email)
+          return res.status(201).json({
+            success: "false",
+            message: "Error!!!Account with this email already exists",
+          });
+        if (e.name === "MongoError" && e.code === 11000 && e.keyPattern.mobile)
+          return res.status(201).json({
+            success: "false",
+            message: "Error!!!Duplicate mobile number",
+          });
+        res.status(201).json({ success: "false", message: e.message });
+      });
+  });
+});
 
 router.post("/login", function (req, res) {
   const email = req.body.email;
@@ -366,6 +334,94 @@ router.put("/acceptchat/:id", function (req, res) {
       res.status(201).json({
         success: "false",
         message: "Error",
+      });
+    });
+});
+
+// router.post("/sendmessage", async (req, res) => {
+//   const patientId = req.body.patientId;
+//   const doctorId = req.body.doctorId;
+//   const message = req.body.message;
+//   var chat = new Chat({
+//     senderdoctorId: doctorId,
+//     receiverpatientId: patientId,
+//     message: message,
+//   });
+//   chat
+//     .save()
+//     .then(() => {
+//       res.status(201).json({
+//         success: "true",
+//         message: "Message Sent",
+//       });
+//     })
+//     .catch((e) => {
+//       res.status(201).json({
+//         success: "false",
+//         message: e,
+//       });
+//     });
+// });
+
+router.post("/sendmessage", async (req, res) => {
+  const patientId = req.body.patientId;
+  const doctorId = req.body.doctorId;
+  const message = req.body.message;
+
+  ChatRequest.findOneAndUpdate(
+    {
+      patientId: patientId,
+      doctorId: doctorId,
+    },
+    {
+      lastMessage: message,
+      $push: { chat: { message: message, sender: "Doctor" } },
+    }
+  )
+    .then(() => {
+      res.status(201).json({
+        success: "true",
+        message: "Message Sent",
+      });
+    })
+    .catch((e) => {
+      res.status(201).json({
+        success: "false",
+        message: e,
+      });
+    });
+});
+
+router.get("/viewchat", async function (req, res) {
+  const patientId = req.body.patientId;
+  const doctorId = req.body.doctorId;
+  const logDoctor = await ChatRequest.find({
+    patientId: patientId,
+    doctorId: doctorId,
+  })
+    .then((result) => {
+      res.status(201).json({ success: "true", data: result });
+    })
+    .catch((e) => {
+      res.status(201).json({
+        success: "false",
+        message: e,
+      });
+    });
+});
+
+router.get("/chatroom/:id", async function (req, res) {
+  const doctorId = req.params.id;
+  const logDoctor = await ChatRequest.find({
+    doctorId: doctorId,
+  })
+    .then((result) => {
+      res.status(201).json({ success: "true", data: result });
+    })
+    .catch((e) => {
+      res.status(201).json({
+        success: "false",
+        message: e,
       });
     });
 });
