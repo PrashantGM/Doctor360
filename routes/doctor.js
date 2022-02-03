@@ -30,7 +30,7 @@ router.post("/register", async (req, res) => {
       password: hash,
     });
     dData
-      .save()
+      .save({ validateBeforeSave: false })
       .then(() => {
         res
           .status(201)
@@ -38,16 +38,16 @@ router.post("/register", async (req, res) => {
       })
       .catch((e) => {
         if (e.name === "MongoError" && e.code === 11000 && e.keyPattern.email)
-          return res.status(201).json({
+          return res.status(400).json({
             success: "false",
             message: "Error!!!Account with this email already exists",
           });
         if (e.name === "MongoError" && e.code === 11000 && e.keyPattern.mobile)
-          return res.status(201).json({
+          return res.status(400).json({
             success: "false",
             message: "Error!!!Duplicate mobile number",
           });
-        res.status(201).json({ success: "false", message: e.message });
+        res.status(500).json({ success: "false", message: e.message });
       });
   });
 });
@@ -55,12 +55,13 @@ router.post("/register", async (req, res) => {
 router.post("/login", function (req, res) {
   const email = req.body.email;
   const password = req.body.password;
+  console.log(req.body);
   Doctor.findOne({ email: email })
     .then((data) => {
       console.log(data);
       if (data == null) {
         return res
-          .status(201)
+          .status(401)
           .json({ success: "false", message: "Invalid Credentials!!" });
       }
       bcrypt.compare(password, data.password, function (err, result) {
@@ -81,7 +82,7 @@ router.post("/login", function (req, res) {
     })
     .catch((e) => {
       res
-        .status(201)
+        .status(500)
         .json({ success: "false", data: data, message: e.message });
     });
 });
@@ -95,7 +96,7 @@ router.get("/viewappointments/requests/:id", async function (req, res) {
     .populate("patientId", ["name", "profileImg"])
     .exec((err, result) => {
       if (err) return handleError(err);
-      res.status(201).json({ success: "true", data: result });
+      res.status(200).json({ success: "true", data: result });
     });
 });
 router.delete("/rejectappointment/:id", function (req, res) {
@@ -105,11 +106,11 @@ router.delete("/rejectappointment/:id", function (req, res) {
   })
     .then(function (result) {
       res
-        .status(201)
+        .status(200)
         .json({ success: "true", message: "Rejected and Deleted from system" });
     })
     .catch(function (err) {
-      res.status(201).json({ message: err });
+      res.status(500).json({ message: err });
     });
 });
 
@@ -122,7 +123,7 @@ router.get("/viewappointments/accepted/:id", async function (req, res) {
     .populate("patientId", ["name", "profileImg"])
     .exec((err, result) => {
       if (err) return handleError(err);
-      res.status(201).json({ success: "true", data: result });
+      res.status(200).json({ success: "true", data: result });
     });
 });
 
@@ -135,18 +136,18 @@ router.put("/acceptappointments/:id", function (req, res) {
       Appointment.updateOne({ _id: appointmentId }, { requestStatus: 1 })
         .then(function (result) {
           res
-            .status(201)
+            .status(200)
             .json({ success: "true", message: "Appointment Confirmed" });
         })
         .catch(function (e) {
-          res.status(201).json({
+          res.status(400).json({
             success: "false",
             message: "Error!!!",
           });
         });
     })
     .catch(function (e) {
-      res.status(201).json({
+      res.status(500).json({
         success: "false",
         message: "Error",
       });
@@ -156,11 +157,11 @@ router.put("/acceptappointments/:id", function (req, res) {
 router.get("/view", async function (req, res) {
   const logDoctor = await Doctor.find()
     .then((result) => {
-      res.status(201).json({ success: "true", data: result });
+      res.status(200).json({ success: "true", data: result });
     })
     .catch((e) => {
       res
-        .status(201)
+        .status(500)
         .json({ success: "false", message: "Error loading results" });
     });
 });
@@ -170,11 +171,11 @@ router.get("/view/:id", async function (req, res) {
   const id = req.params.id;
   const logDoctor = await Doctor.findOne({ _id: id })
     .then((result) => {
-      res.status(201).json({ success: "true", data: result });
+      res.status(200).json({ success: "true", data: result });
     })
     .catch((e) => {
       res
-        .status(201)
+        .status(500)
         .json({ success: "false", message: "Error loading results" });
     });
 });
@@ -220,13 +221,13 @@ router.put(
       }
     )
       .then(function (result) {
-        res.status(201).json({
+        res.status(200).json({
           success: "true",
           message: `Profile Updated Successfully`,
         });
       })
       .catch(function (e) {
-        res.status(201).json({ success: "false", message: e });
+        res.status(500).json({ success: "false", message: e });
       });
   }
 );
@@ -236,11 +237,11 @@ router.get("/viewpassword/:id", async function (req, res) {
   const id = req.params.id;
   const logDoctor = await Doctor.findOne({ _id: id })
     .then((result) => {
-      res.status(201).json({ success: "true", data: result.password });
+      res.status(200).json({ success: "true", data: result.password });
     })
     .catch((e) => {
       res
-        .status(201)
+        .status(500)
         .json({ success: "false", message: "Error loading results" });
     });
 });
@@ -258,13 +259,13 @@ router.put("/changepassword/:id", function (req, res) {
         bcrypt.hash(password, 10, function (err, hash) {
           Doctor.updateOne({ _id: did }, { password: hash })
             .then(function (result) {
-              res.status(201).json({
+              res.status(200).json({
                 success: "true",
                 message: "Password Changed Successfully",
               });
             })
             .catch(function (e) {
-              res.status(201).json({ success: "false", message: e });
+              res.status(500).json({ success: "false", message: e });
             });
         });
       }
@@ -282,7 +283,7 @@ router.get("/viewchats/requests/:id", async function (req, res) {
     .populate("patientId", ["name", "profileImg"])
     .exec((err, result) => {
       if (err) return handleError(err);
-      res.status(201).json({ success: "true", data: result });
+      res.status(200).json({ success: "true", data: result });
     });
 });
 router.delete("/rejectchat/:id", function (req, res) {
@@ -290,11 +291,11 @@ router.delete("/rejectchat/:id", function (req, res) {
   ChatRequest.deleteOne({ _id: chatId })
     .then(function (result) {
       res
-        .status(201)
+        .status(200)
         .json({ success: "true", message: "Rejected and Deleted from system" });
     })
     .catch(function (err) {
-      res.status(201).json({ message: err });
+      res.status(500).json({ message: err });
     });
 });
 
@@ -307,7 +308,7 @@ router.get("/viewchats/accepted/:id", async function (req, res) {
     .populate("patientId", ["name", "profileImg"])
     .exec((err, result) => {
       if (err) return handleError(err);
-      res.status(201).json({ success: "true", data: result });
+      res.status(200).json({ success: "true", data: result });
     });
 });
 
@@ -317,21 +318,21 @@ router.put("/acceptchat/:id", function (req, res) {
     .then(function (result) {
       if (result == null)
         return res
-          .status(201)
+          .status(404)
           .json({ success: "false", message: "This PatientId doesn't exist" });
       ChatRequest.updateOne({ _id: chatId }, { requestStatus: 1 })
         .then(function (result) {
-          res.status(201).json({ success: "true", message: "Chat Accepted" });
+          res.status(200).json({ success: "true", message: "Chat Accepted" });
         })
         .catch(function (e) {
-          res.status(201).json({
+          res.status(500).json({
             success: "false",
             message: "Error!!!",
           });
         });
     })
     .catch(function (e) {
-      res.status(201).json({
+      res.status(500).json({
         success: "false",
         message: "Error",
       });
@@ -379,13 +380,13 @@ router.post("/sendmessage", async (req, res) => {
     }
   )
     .then(() => {
-      res.status(201).json({
+      res.status(200).json({
         success: "true",
         message: "Message Sent",
       });
     })
     .catch((e) => {
-      res.status(201).json({
+      res.status(500).json({
         success: "false",
         message: e,
       });
@@ -403,7 +404,7 @@ router.get("/viewchat", async function (req, res) {
     .populate("patientId", ["name", "profileImg"])
     .exec((err, result) => {
       if (err) return handleError(err);
-      res.status(201).json({ success: "true", data: result });
+      res.status(200).json({ success: "true", data: result });
     });
 });
 
@@ -416,7 +417,7 @@ router.get("/chatroom/:id", async function (req, res) {
     .populate("patientId", ["name", "profileImg"])
     .exec((err, result) => {
       if (err) return handleError(err);
-      res.status(201).json({ success: "true", data: result });
+      res.status(200).json({ success: "true", data: result });
     });
 });
 

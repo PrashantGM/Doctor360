@@ -21,7 +21,7 @@ router.post("/register", (req, res) => {
       })
       .catch((e) => {
         res
-          .status(201)
+          .status(401)
           .json({ success: "false", message: "Unsuccessful Registration" });
       });
   });
@@ -33,23 +33,23 @@ router.post("/login", function (req, res) {
     .then((data) => {
       if (data == null) {
         return res
-          .status(201)
+          .status(401)
           .json({ success: "false", message: "Invalid Credentials!!" });
       }
       bcrypt.compare(password, data.password, function (err, result) {
         if (result == false) {
           return res
-            .status(201)
+            .status(401)
             .json({ success: "false", message: "Invalid Credentials" });
         }
-        return res.status(201).json({
+        return res.status(200).json({
           success: "true",
           message: "Successfully logged into admin panel",
         });
       });
     })
     .catch((e) => {
-      res.status(201).json({ success: "false", message: e });
+      res.status(500).json({ success: "false", message: e });
     });
 });
 //direct use of doctor router module for admin route to be tried later
@@ -59,33 +59,33 @@ router.post("/login", function (req, res) {
 router.get("/doctors/view", async function (req, res) {
   const logDoctor = await Doctor.find()
     .then((result) => {
-      res.status(201).json({ success: "true", data: result });
+      res.status(200).json({ success: "true", data: result });
     })
     .catch((e) => {
       res
-        .status(201)
+        .status(500)
         .json({ success: "false", message: "Error loading results" });
     });
 });
 router.get("/doctors/view/pending", async function (req, res) {
   const logDoctor = await Doctor.find({ status: 0 })
     .then((result) => {
-      res.status(201).json({ success: "true", data: result });
+      res.status(200).json({ success: "true", data: result });
     })
     .catch((e) => {
       res
-        .status(201)
+        .status(500)
         .json({ success: "false", message: "Error loading results" });
     });
 });
 router.get("/doctors/view/verified", async function (req, res) {
   const logDoctor = await Doctor.find({ status: 1 })
     .then((result) => {
-      res.status(201).json({ success: "true", data: result });
+      res.status(200).json({ success: "true", data: result });
     })
     .catch((e) => {
       res
-        .status(201)
+        .status(500)
         .json({ success: "false", message: "Error loading results" });
     });
 });
@@ -96,11 +96,11 @@ router.put("/doctors/update/:id", function (req, res) {
   Doctor.updateOne({ _id: did }, { status: 1 })
     .then(function (result) {
       res
-        .status(201)
+        .status(200)
         .json({ success: "true", message: "Doctor Verfied Successfully" });
     })
     .catch(function (e) {
-      res.status(201).json({
+      res.status(500).json({
         success: "false",
         message: "Error! Verification Unsuccessful",
       });
@@ -109,11 +109,11 @@ router.put("/doctors/update/:id", function (req, res) {
 router.get("/patients/view", async function (req, res) {
   const logDoctor = await Patient.find()
     .then((result) => {
-      res.status(201).json({ success: "true", data: result });
+      res.status(200).json({ success: "true", data: result });
     })
     .catch((e) => {
       res
-        .status(201)
+        .status(500)
         .json({ success: "false", message: "Error loading results" });
     });
 });
@@ -122,10 +122,10 @@ router.delete("/doctors/reject/:id", function (req, res) {
   const did = req.params.id;
   Doctor.deleteOne({ _id: did })
     .then(function (result) {
-      res.status(201).json({ message: "Rejected and Deleted from system" });
+      res.status(200).json({ message: "Rejected and Deleted from system" });
     })
     .catch(function (err) {
-      res.status(201).json({ message: err });
+      res.status(500).json({ message: err });
     });
 });
 router.delete("/doctors/deleteall", (req, res) => {
